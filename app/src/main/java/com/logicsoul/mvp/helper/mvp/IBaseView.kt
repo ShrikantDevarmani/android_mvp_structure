@@ -10,7 +10,7 @@ interface IBaseView {
 
     fun onBaseThrowableError(throwable: Throwable, requestCode: Int)
 
-    fun onBaseNetworkFailure(isNetworkAvailable: Boolean, message: String, requestCode: Int)
+    fun onBaseNetworkFailure(message: String)
 
     fun onBaseSearchEmpty(emptyMessage: String)
 

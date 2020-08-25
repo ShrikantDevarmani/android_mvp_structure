@@ -13,7 +13,7 @@ interface CommonDataSourceCallback<T> {
 
     fun onThrowableError(throwable: Throwable, requestCode: Int)
 
-    fun onNetworkFailure(isNetworkAvailable: Boolean, message: String, requestCode: Int)
+    fun onNetworkFailure(message: String)
 
     fun onSearchEmpty(emptyMessage: String)
 }

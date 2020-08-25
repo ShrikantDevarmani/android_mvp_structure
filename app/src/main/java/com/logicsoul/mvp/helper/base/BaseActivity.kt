@@ -13,9 +13,7 @@ import com.logicsoul.mvp.helper.mvp.IBaseView
 
 /**
  * The abstract base container responsible for showing and destroying [Fragment] and handling
- * back and up navigation using the Fragment back stack. This is based on the
- * Fragment Oriented Architecture explained here
- * http://vinsol.com/blog/2014/09/15/advocating-fragment-oriented-applications-in-android/
+ * back and up navigation using the Fragment back stack. This is based on the Fragment Oriented Architecture explained here
  */
 abstract class BaseActivity : AppCompatActivity(), IBaseView,
     FragmentManager.OnBackStackChangedListener {
@@ -111,9 +109,7 @@ abstract class BaseActivity : AppCompatActivity(), IBaseView,
     }
 
     override fun onBaseNetworkFailure(
-        isNetworkAvailable: Boolean,
-        message: String,
-        requestCode: Int
+        message: String
     ) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }

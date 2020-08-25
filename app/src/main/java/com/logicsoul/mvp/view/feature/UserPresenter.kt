@@ -1,32 +1,32 @@
 package com.logicsoul.mvp.view.feature
 
 import android.content.Context
-import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import com.logicsoul.mvp.callback.CommonDataSourceCallback
 import com.logicsoul.mvp.data.repositories.UserRepository
-import com.logicsoul.mvp.helper.StringConstants
-import com.logicsoul.mvp.helper.mvp.BasePresenter
 import com.logicsoul.mvp.model.User
 
+
 /**
- * DashboardPresenter class which is wrt DashboardActivity
+ * UserPresenter class which is wrt DashboardActivity
+ * For Live data reference : Reference : https://medium.com/@techadroit89/using-livedata-in-mvp-1dc3425edf9c
+ * Just read [informative]: https://medium.com/androiddevelopers/viewmodels-and-livedata-patterns-antipatterns-21efaef74a54
  */
 
 class UserPresenter(
-    view: UserContract.View,
     private var userRepository: UserRepository
-) : BasePresenter<UserContract.View>(), UserContract.Presenter {
+) {
 
-    init {
-        // referring to
-        this.view = (view)
-    }
+    var listOfUsersLiveData = MutableLiveData<List<User>>()
+    var onMessageLiveData = MutableLiveData<String>()
+    var onNetworkFailureLiveData = MutableLiveData<String>()
+    var onProgressLoaderLiveData = MutableLiveData<Boolean>(false)
+    var onThrowableErrorLiveData = MutableLiveData<Throwable>()
+    // add search empty live data also if you needed as like above
 
-    override fun getUsers(context: Context, callbackCommon: CommonDataSourceCallback<User>) {
 
-        if (!isViewAttached) return
-
-        callbackCommon.setProgressBar(true)
+    fun getUsers(context: Context) {
+        onProgressLoaderLiveData.value = true
 
         userRepository.getUsers(
             context,
@@ -36,48 +36,33 @@ class UserPresenter(
                     responseObject: User?,
                     requestCode: Int
                 ) {
-                    Log.d(StringConstants.TAG, "onSuccessOfList in DashboardPresenter")
-                    callbackCommon.setProgressBar(false)
-                    // todo call view callback for success as below / as per requirement
-                    view?.showUsers(responseList)
+                    onProgressLoaderLiveData.value = false
+                    listOfUsersLiveData.value = responseList
                 }
 
                 override fun showMessage(message: String, requestCode: Int) {
-                    callbackCommon.showMessage(message, requestCode)
+                    onMessageLiveData.value = message
                 }
 
                 override fun setProgressBar(show: Boolean) {
-                    callbackCommon.setProgressBar(show)
+                    onProgressLoaderLiveData.value = show
                 }
 
                 override fun onThrowableError(throwable: Throwable, requestCode: Int) {
-                    Log.d(StringConstants.TAG, "onFailure in DashboardPresenter")
-                    //todo hide progress and show error message as below / as per requirement
-                    callbackCommon.setProgressBar(false)
-                    callbackCommon.onThrowableError(throwable, requestCode)
+                    onProgressLoaderLiveData.value = false
+                    onThrowableErrorLiveData.value = throwable
                 }
 
                 override fun onNetworkFailure(
-                    isNetworkAvailable: Boolean,
-                    message: String,
-                    requestCode: Int
+                    message: String
                 ) {
-                    Log.d(
-                        StringConstants.TAG,
-                        "onNetworkFailure in DashboardPresenter"
-                    )
-                    callbackCommon.setProgressBar(false)
-                    // todo show network error as below / as per requirement
-                    callbackCommon.onNetworkFailure(true, message, requestCode)
+                    onProgressLoaderLiveData.value = false
+                    onNetworkFailureLiveData.value = message
                 }
 
                 override fun onSearchEmpty(emptyMessage: String) {
                     // call if search functionality there
                 }
             })
-    }
-
-    override fun onDetach() {
-        super.onDetach()
     }
 }

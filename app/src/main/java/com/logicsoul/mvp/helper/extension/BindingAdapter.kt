@@ -31,10 +31,22 @@ fun setItems(view: RecyclerView, items: List<User>?) {
     }
 }
 
+// for multiple adapter items
+//@BindingAdapter("app:items")
+//fun <T> setItems(listView: RecyclerView, items: List<T>?) {
+//    items?.let {
+//        if (listView.adapter is UsersAdapter) {
+//            (listView.adapter as UsersAdapter).itemList = items
+//        }else if(){
+//
+//        }
+//    }
 
-@BindingAdapter("bind:loadUrl")
-fun bindUrlImage(view: ImageView, url: String) {
-    Glide.with(view)
-        .load(url)
-        .into(view)
-}
+
+
+    @BindingAdapter("bind:loadUrl")
+    fun bindUrlImage(view: ImageView, url: String) {
+        Glide.with(view)
+            .load(url)
+            .into(view)
+    }
